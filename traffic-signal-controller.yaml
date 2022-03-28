@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traffic-signal
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: device-config
+  namespace: traffic-signal
+data:
+  DEVICE_HOST_PORT: 192.168.0.80:8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-signal-controller
+  namespace: traffic-signal
+spec:
+  selector:
+    matchLabels:
+      app: traffic-signal-controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: traffic-signal-controller
+    spec:
+      containers:
+      - name: traffic-signal-controller
+        image: local.registry/tscon-alloff:1.0
+        command:
+        - /program-traffic-signal.sh
+        - $(DEVICE_HOST_PORT)
+        - /traffic_program_data_file.json
+        envFrom:
+        - configMapRef:
+          name: device-config
+        ports:
+        - containerPort: 8080
