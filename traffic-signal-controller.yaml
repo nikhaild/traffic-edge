@@ -35,6 +35,6 @@ spec:
         - /traffic_program_data_file.json
         envFrom:
         - configMapRef:
-          name: device-config
+            name: device-config
         ports:
         - containerPort: 8080
