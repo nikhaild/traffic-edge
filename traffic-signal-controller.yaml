@@ -21,6 +21,8 @@ spec:
     matchLabels:
       app: traffic-signal-controller
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -28,7 +30,7 @@ spec:
     spec:
       containers:
       - name: traffic-signal-controller
-        image: local.registry/tscon-sched:2.0
+        image: local.registry/tscon-alloff:1.0
         command:
         - /program-traffic-signal.sh
         - $(DEVICE_HOST_PORT)
